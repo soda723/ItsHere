@@ -8,8 +8,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="멤버십"
-        android:textColor="@color/myBlue"
+        android:text="쿠폰관리"
+        android:textColor="@color/myYellow"
         android:textSize="100dp"/>
 
 

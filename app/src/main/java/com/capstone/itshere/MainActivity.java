@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toolbar;
 
+import com.capstone.itshere.account.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     private ImageButton menubutton;
+
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +71,25 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        //drawer
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.drawer_login:
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        break;
+                    case R.id.drawer_info:
+                        break;
+                    case R.id.drawer_setting:
+                        break;
+                }
+                drawerLayout.closeDrawer(navigationView);
+                return false;
+            }
+        });
+
     }
     @Override
     public void onBackPressed(){

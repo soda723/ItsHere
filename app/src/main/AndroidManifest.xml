@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ItsHere">
         <activity
+            android:name=".account.SignupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".account.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".accountBook.ab_add_Activity"
             android:exported="false" />
         <activity

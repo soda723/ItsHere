@@ -7,6 +7,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/ly_total"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal">
@@ -109,7 +110,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="가계부를 작성해 보세요!"/>
+        android:text="로그인 하세요!"/>
+    <TextView
+        android:id="@+id/tv_hint2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="가계부를 작성해보세요!"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

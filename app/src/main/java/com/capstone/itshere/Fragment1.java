@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.capstone.itshere.account.FirebaseID;
@@ -23,6 +24,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,6 +38,7 @@ import java.util.Map;
 
 public class Fragment1 extends Fragment {
 
+    private static String TAG = "프레그먼트1";
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -43,8 +46,10 @@ public class Fragment1 extends Fragment {
     private ArrayList<DailyNote> arrayList;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    final FirebaseUser User = mAuth.getCurrentUser();
     public static String document_email;
-    private TextView tv_hint;
+    private TextView tv_hint, tv_hint2;
+    private LinearLayout ly_total;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +64,8 @@ public class Fragment1 extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         arrayList = new ArrayList<>(); // Dailynote 객체를 담을 어레이 리스트
         tv_hint = view.findViewById(R.id.tv_hint);
+        tv_hint2 = view.findViewById(R.id.tv_hint2);
+        ly_total = view.findViewById(R.id.ly_total);
 
         //등록버튼 설정
         fab = (FloatingActionButton) view.findViewById(R.id.fab_add);
@@ -74,30 +81,30 @@ public class Fragment1 extends Fragment {
 
     @Override
     public void onStart(){
-        Log.e("here0", document_email+"happy");
-        //사용자ID 가져오기
-        if(mAuth.getCurrentUser() != null){
-            Log.e("herea", document_email+"happy");
-            db.collection(FirebaseID.user).document(mAuth.getCurrentUser().getUid())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if(task.getResult() != null){
-                                Log.e("hereb", document_email+"happy");
-                                document_email = (String) task.getResult().getData()
-                                        .get(FirebaseID.email);
-                                Log.e("here1", document_email+"happy");
-
-                            }
-                        }});
-        }
         super.onStart();
+//        //사용자ID 가져오기
+//        if(mAuth.getCurrentUser(). != null){
+//            Log.e(TAG +"_b", document_email+":happy");
+//            document_email = mAuth.getID
+//            db.collection(FirebaseID.user).document(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                    Log.e(TAG +"_c", document_email+":happy");
+//                    if(task.getResult() != null){
+//                        Log.e(TAG +"_d", document_email+":happy");
+//                        document_email = (String) task.getResult().getData()
+//                                .get(FirebaseID.email);
+//                        Log.e(TAG +"_e", document_email+":happy");
+//
+//                    }
+//                }
+//            });
+//        }//--*사용자ID가져오기 끝
+        //db값 가져오기
         try{
-
-            //db값 가져오기
-            Log.e("here2", document_email+"happy");
-            db.collection(FirebaseID.noteboard).document("test1@example.com").collection(FirebaseID.noteitem)
+            document_email = User.getEmail();
+            //db에서 값 가져오기 > arraylist에 담기 > adpater에 저장 > 리사이클러 뷰에 뿌리기
+            db.collection(FirebaseID.noteboard).document(document_email).collection(FirebaseID.noteitem)
                     .orderBy(FirebaseID.notedate, Query.Direction.DESCENDING)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -114,25 +121,32 @@ public class Fragment1 extends Fragment {
                                     DailyNote item = new DailyNote(date, category, note, amount);
                                     arrayList.add(item);
                                 }
-                                Log.e("abc", String.valueOf(arrayList.size()));
+                                if(arrayList.size() == 0){
+                                    tv_hint2.setVisibility(View.VISIBLE);
+                                }else{
+                                    tv_hint2.setVisibility(View.GONE);
+                                }
                                 adapter = new DailyNoteAdapter(arrayList, getContext());
                                 recyclerView.setAdapter(adapter);
                             }
                         }
                     });
+            //--*db >...>뿌리기 끝
             tv_hint.setVisibility(View.GONE);
-
+            ly_total.setVisibility(View.VISIBLE);
         }catch (NullPointerException e){
-            Log.e("fragment1 db error", String.valueOf(e));
+            //로그인한 유저가 없을때
+            Log.e(TAG + " db error", String.valueOf(e));
             tv_hint.setVisibility(View.VISIBLE);
+            ly_total.setVisibility(View.GONE);
+            tv_hint2.setVisibility(View.GONE);
         }
-
-    }
+    }//onStart--*
 
     public String timestampToString(String stamp){
         stamp = stamp.replace("Timestamp(seconds=", "").replace(" nanoseconds=", "").replace(")", "");
         String[] array = stamp.split(",");
-        String ds = array[0] ;
+        String ds = array[0];
         return ds;
     }
 

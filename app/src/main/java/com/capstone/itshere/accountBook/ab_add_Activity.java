@@ -1,15 +1,21 @@
 package com.capstone.itshere.accountBook;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.capstone.itshere.R;
+import com.capstone.itshere.account.FirebaseID;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -21,17 +27,24 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.sql.Array;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class ab_add_Activity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private String email;
 
     private ImageButton back;
     private TextView title;
 
     private RadioGroup radio;
+    private RadioButton radioValue;
     EditText ab_add_date, ab_add_amount, ab_add_note, ab_add_memo;
     Spinner spinner_account, spinner_category;
     private Button btn_save;
@@ -84,8 +97,11 @@ public class ab_add_Activity extends AppCompatActivity {
                 }else if(checkedId == R.id.ab_add_radio_expense){
                     Toast.makeText(getApplicationContext(), "지출", Toast.LENGTH_SHORT).show();
                 }
+                radioValue = findViewById(radio.getCheckedRadioButtonId());
             }
         });
+
+
 
         //datepicker설정
         ab_add_date.setOnClickListener(new View.OnClickListener() {
@@ -112,12 +128,58 @@ public class ab_add_Activity extends AppCompatActivity {
         cate_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_category.setAdapter(cate_adapter);
 
+        //사용자ID 가져오기
+        if(mAuth.getCurrentUser() != null){
+            db.collection(FirebaseID.user).document(mAuth.getCurrentUser().getUid())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if(task.getResult() != null){
+                                email = (String) task.getResult().getData()
+                                        .get(FirebaseID.email);
+                            }
+                        }
+                    });
+        }
+
+        //add버튼 클릭
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mAuth.getCurrentUser() != null){
+                    String noteId = db.collection(FirebaseID.note).document().getId();
+                    Map<String,Object> data = new HashMap<>();
+                    data.put(FirebaseID.documentId, mAuth.getCurrentUser().getUid());
+                    data.put(FirebaseID.bigcate, radioValue.getText().toString());
+                    data.put(FirebaseID.notedate, StringToTimeStamp(ab_add_date.getText().toString()));
+                    data.put(FirebaseID.account, spinner_account.getSelectedItem().toString());
+                    data.put(FirebaseID.category, spinner_category.getSelectedItem().toString());
+                    data.put(FirebaseID.amount, ab_add_amount.getText().toString());
+                    data.put(FirebaseID.note, ab_add_note.getText().toString());
+                    data.put(FirebaseID.memo, ab_add_memo.getText().toString());
+
+                    db.collection(FirebaseID.noteboard).document(email)
+                            .collection(FirebaseID.noteitem).document(noteId)
+                            .set(data, SetOptions.merge());
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), "오류가 발생했습니다.", Toast.LENGTH_SHORT);
+                }
+            }
+        });
 
     }//onCreate
     private void updateLabel(){
-        String myFormat = "yyyy/MM/dd";
+        String myFormat = "yyyy-MM-dd";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
         ab_add_date.setText(sdf.format(myCalendar.getTime()));
 
+    }
+    
+    public Timestamp StringToTimeStamp(String datestring){
+        String newdate = datestring + " 00:00:00";
+        Timestamp timestamp = Timestamp.valueOf(newdate);
+        return timestamp;
     }
 }

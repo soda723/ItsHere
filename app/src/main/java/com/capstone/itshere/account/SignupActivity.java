@@ -41,7 +41,7 @@ public class SignupActivity extends AppCompatActivity {
 
         //툴바설정
         title = (TextView) findViewById(R.id.tool_sub1_title);
-        title.setText("로그인");
+        title.setText("회원가입");
         back = (ImageButton) findViewById(R.id.tool_sub1_back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override

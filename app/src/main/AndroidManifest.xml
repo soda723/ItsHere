@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ItsHere">
         <activity
+            android:name=".accountBook.statsActivity"
+            android:exported="false" />
+        <activity
             android:name=".account.SignupActivity"
             android:exported="false" />
         <activity

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import com.capstone.itshere.account.FirebaseID;
 import com.capstone.itshere.accountBook.DailyNote;
 import com.capstone.itshere.accountBook.DailyNoteAdapter;
 import com.capstone.itshere.accountBook.ab_add_Activity;
+import com.capstone.itshere.accountBook.statsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,7 +35,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 public class Fragment1 extends Fragment {
@@ -50,6 +54,7 @@ public class Fragment1 extends Fragment {
     public static String document_email;
     private TextView tv_hint, tv_hint2;
     private LinearLayout ly_total;
+    private Button btn_stats;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,6 +71,7 @@ public class Fragment1 extends Fragment {
         tv_hint = view.findViewById(R.id.tv_hint);
         tv_hint2 = view.findViewById(R.id.tv_hint2);
         ly_total = view.findViewById(R.id.ly_total);
+        btn_stats = view.findViewById(R.id.btn_stats);
 
         //등록버튼 설정
         fab = (FloatingActionButton) view.findViewById(R.id.fab_add);
@@ -76,31 +82,22 @@ public class Fragment1 extends Fragment {
                 startActivity(intent);
             }
         });
+
+        //통계창 버튼 클릭
+        btn_stats.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent2 = new Intent(getContext(), statsActivity.class);
+                startActivity(intent2);
+            }
+        });
+
         return view;
     }//OnCreateView
 
     @Override
     public void onStart(){
         super.onStart();
-//        //사용자ID 가져오기
-//        if(mAuth.getCurrentUser(). != null){
-//            Log.e(TAG +"_b", document_email+":happy");
-//            document_email = mAuth.getID
-//            db.collection(FirebaseID.user).document(mAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                    Log.e(TAG +"_c", document_email+":happy");
-//                    if(task.getResult() != null){
-//                        Log.e(TAG +"_d", document_email+":happy");
-//                        document_email = (String) task.getResult().getData()
-//                                .get(FirebaseID.email);
-//                        Log.e(TAG +"_e", document_email+":happy");
-//
-//                    }
-//                }
-//            });
-//        }//--*사용자ID가져오기 끝
-        //db값 가져오기
         try{
             document_email = User.getEmail();
             //db에서 값 가져오기 > arraylist에 담기 > adpater에 저장 > 리사이클러 뷰에 뿌리기
@@ -147,7 +144,14 @@ public class Fragment1 extends Fragment {
         stamp = stamp.replace("Timestamp(seconds=", "").replace(" nanoseconds=", "").replace(")", "");
         String[] array = stamp.split(",");
         String ds = array[0];
-        return ds;
+        Log.i(TAG, "타임스탬프 변환실행"+ds);
+        long timestamp = Long.parseLong(ds);
+        Date date = new java.util.Date(timestamp*1000L);
+        SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT+9"));
+        String formattedDate = sdf.format(date);
+        Log.i(TAG, "타임스탬프 변환실행"+formattedDate);
+        return formattedDate;
     }
 
 }

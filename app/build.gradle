@@ -47,6 +47,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     //recyclerView
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    //PieChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
 }
 

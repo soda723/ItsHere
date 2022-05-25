@@ -1,11 +1,13 @@
 package com.capstone.itshere.accountBook;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.ContentInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,6 +58,19 @@ public class DailyNoteAdapter extends RecyclerView.Adapter<DailyNoteAdapter.Dail
             this.tv_dn_category = itemView.findViewById(R.id.tv_dn_category);
             this.tv_dn_note = itemView.findViewById(R.id.tv_dn_note);
             this.tv_dn_amount = itemView.findViewById(R.id.tv_dn_amount);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAbsoluteAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION){
+                        Intent intent = new Intent(context, DailyDetailActivity.class);
+                        context.startActivity(intent);
+                    }else{
+                        Toast.makeText(context,"잘못된 position",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });//-itemView클릭--*
 
         }
     }

@@ -15,6 +15,7 @@ import com.google.firebase.firestore.SetOptions;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -100,6 +101,10 @@ public class ab_add_Activity extends AppCompatActivity {
                 radioValue = findViewById(radio.getCheckedRadioButtonId());
             }
         });
+        if (radioValue == null){
+            radio.check(R.id.ab_add_radio_expense);
+        }
+
 
 
 
@@ -150,12 +155,16 @@ public class ab_add_Activity extends AppCompatActivity {
                 if(mAuth.getCurrentUser() != null){
                     String noteId = db.collection(FirebaseID.note).document().getId();
                     Map<String,Object> data = new HashMap<>();
-                    data.put(FirebaseID.documentId, mAuth.getCurrentUser().getUid());
-                    data.put(FirebaseID.bigcate, radioValue.getText().toString());
+                    data.put(FirebaseID.documentId, noteId);
+                    try{
+                        data.put(FirebaseID.bigcate, radioValue.getText().toString());
+                    }catch(NullPointerException e){
+                        data.put(FirebaseID.bigcate, "지출");
+                    }
                     data.put(FirebaseID.notedate, StringToTimeStamp(ab_add_date.getText().toString()));
                     data.put(FirebaseID.account, spinner_account.getSelectedItem().toString());
                     data.put(FirebaseID.category, spinner_category.getSelectedItem().toString());
-                    data.put(FirebaseID.amount, ab_add_amount.getText().toString());
+                    data.put(FirebaseID.amount, Integer.parseInt(String.valueOf(ab_add_amount.getText())));
                     data.put(FirebaseID.note, ab_add_note.getText().toString());
                     data.put(FirebaseID.memo, ab_add_memo.getText().toString());
 

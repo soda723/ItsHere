@@ -1,19 +1,31 @@
 package com.capstone.itshere.accountBook;
 
 public class DailyNote {
+    private String bigcate;
     private String date;
     private String category;
     private String note;
     private int amount;
+    private String idNum;
 
 
     public DailyNote(){}
 
-    public DailyNote(String date, String category, String note, int amount) {
+    public DailyNote(String bigcate, String date, String category, String note, int amount, String idNum) {
+        this.bigcate = bigcate;
         this.date = date;
         this.category = category;
         this.note = note;
         this.amount = amount;
+        this.idNum = idNum;
+    }
+
+    public String getBigcate() {
+        return bigcate;
+    }
+
+    public void setBigcate(String bigcate) {
+        this.bigcate = bigcate;
     }
 
     public String getDate() {
@@ -40,11 +52,19 @@ public class DailyNote {
         this.note = note;
     }
 
-    public String getAmount() {
-        return Integer.toString(amount);
+    public int getAmount() {
+        return amount;
     }
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public String getIdNum() {
+        return idNum;
+    }
+
+    public void setIdNum(String idNum) {
+        this.idNum = idNum;
     }
 }

@@ -55,6 +55,8 @@ public class Fragment1 extends Fragment {
     private TextView tv_hint, tv_hint2;
     private LinearLayout ly_total;
     private Button btn_stats;
+    private int income , outcome, total;
+    private TextView tv_income, tv_outcome, tv_total;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,6 +74,9 @@ public class Fragment1 extends Fragment {
         tv_hint2 = view.findViewById(R.id.tv_hint2);
         ly_total = view.findViewById(R.id.ly_total);
         btn_stats = view.findViewById(R.id.btn_stats);
+        tv_income = view.findViewById(R.id.tv_income);
+        tv_outcome = view.findViewById(R.id.tv_outcome);
+        tv_total = view.findViewById(R.id.tv_total);
 
         //등록버튼 설정
         fab = (FloatingActionButton) view.findViewById(R.id.fab_add);
@@ -92,6 +97,7 @@ public class Fragment1 extends Fragment {
             }
         });
 
+
         return view;
     }//OnCreateView
 
@@ -108,14 +114,24 @@ public class Fragment1 extends Fragment {
                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                             if (value != null){
                                 arrayList.clear();
+                                income = 0;
+                                outcome = 0;
+                                total = 0;
                                 for(DocumentSnapshot snap : value.getDocuments()){
                                     Map<String, Object> shot = snap.getData();
                                     String date = timestampToString(String.valueOf(shot.get(FirebaseID.notedate)));
                                     String category = String.valueOf(shot.get(FirebaseID.category));
                                     String note = String.valueOf(shot.get(FirebaseID.note));
-                                    Integer amount = Integer.parseInt((String) shot.get(FirebaseID.amount));
+                                    int amount = Integer.parseInt(String.valueOf(shot.get(FirebaseID.amount)));
+                                    String bigcate = String.valueOf(shot.get(FirebaseID.bigcate));
+                                    String docId = String.valueOf(shot.get(FirebaseID.documentId));
+                                    if (bigcate.equals("수입")){
+                                        income += amount;
+                                    }else{
+                                        outcome += amount;
+                                    }
 
-                                    DailyNote item = new DailyNote(date, category, note, amount);
+                                    DailyNote item = new DailyNote(bigcate, date, category, note, amount, docId);
                                     arrayList.add(item);
                                 }
                                 if(arrayList.size() == 0){
@@ -125,6 +141,10 @@ public class Fragment1 extends Fragment {
                                 }
                                 adapter = new DailyNoteAdapter(arrayList, getContext());
                                 recyclerView.setAdapter(adapter);
+                                total = income - outcome;
+                                tv_income.setText(String.valueOf(income));
+                                tv_outcome.setText(String.valueOf(outcome));
+                                tv_total.setText(String.valueOf(total));
                             }
                         }
                     });

@@ -16,6 +16,12 @@
             android:layout_height="match_parent"
             android:text="22.05.09."/>
         <TextView
+            android:id="@+id/tv_dn_bigcate"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="●"/>
+        <TextView
             android:id="@+id/tv_dn_category"
             android:layout_width="70dp"
             android:gravity="center"

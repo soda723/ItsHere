@@ -2,6 +2,7 @@ package com.capstone.itshere.accountBook;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.ContentInfo;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.itshere.R;
@@ -36,10 +38,18 @@ public class DailyNoteAdapter extends RecyclerView.Adapter<DailyNoteAdapter.Dail
 
     @Override
     public void onBindViewHolder(@NonNull DailyNoteHolder holder, int position) {
-        holder.tv_dn_date.setText(arrayList.get(position).getDate());
-        holder.tv_dn_category.setText(arrayList.get(position).getCategory());
-        holder.tv_dn_note.setText(arrayList.get(position).getNote());
-        holder.tv_dn_amount.setText(arrayList.get(position).getAmount());
+        DailyNote myitem = arrayList.get(position);
+        holder.tv_dn_date.setText(myitem.getDate());
+        holder.tv_dn_category.setText(myitem.getCategory());
+        holder.tv_dn_note.setText(myitem.getNote());
+        holder.tv_dn_amount.setText(String.valueOf(myitem.getAmount()));
+        String colorpos = myitem.getBigcate();
+        if (colorpos.equals("수입")){
+            holder.tv_dn_bigcate.setTextColor(ContextCompat.getColor(context,R.color.myBlue));
+        }else{
+            holder.tv_dn_bigcate.setTextColor(ContextCompat.getColor(context,R.color.myRed));
+        }
+
     }
 
     @Override
@@ -48,6 +58,7 @@ public class DailyNoteAdapter extends RecyclerView.Adapter<DailyNoteAdapter.Dail
     }
 
     public class DailyNoteHolder extends RecyclerView.ViewHolder {
+        TextView tv_dn_bigcate;
         TextView tv_dn_date;
         TextView tv_dn_category;
         TextView tv_dn_note;
@@ -58,13 +69,17 @@ public class DailyNoteAdapter extends RecyclerView.Adapter<DailyNoteAdapter.Dail
             this.tv_dn_category = itemView.findViewById(R.id.tv_dn_category);
             this.tv_dn_note = itemView.findViewById(R.id.tv_dn_note);
             this.tv_dn_amount = itemView.findViewById(R.id.tv_dn_amount);
+            this.tv_dn_bigcate = itemView.findViewById(R.id.tv_dn_bigcate);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int pos = getAbsoluteAdapterPosition();
+                    String idNum = arrayList.get(pos).getIdNum();
                     if (pos != RecyclerView.NO_POSITION){
                         Intent intent = new Intent(context, DailyDetailActivity.class);
+                        intent.putExtra("idNum", idNum);
+                        Log.e("in adpater", idNum);
                         context.startActivity(intent);
                     }else{
                         Toast.makeText(context,"잘못된 position",Toast.LENGTH_SHORT).show();

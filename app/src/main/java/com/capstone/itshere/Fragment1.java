@@ -1,10 +1,8 @@
 package com.capstone.itshere;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,8 +21,6 @@ import com.capstone.itshere.accountBook.DailyNote;
 import com.capstone.itshere.accountBook.DailyNoteAdapter;
 import com.capstone.itshere.accountBook.ab_add_Activity;
 import com.capstone.itshere.accountBook.statsActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -59,6 +55,8 @@ public class Fragment1 extends Fragment {
     private Button btn_stats;
     private int income , outcome, total;
     private TextView tv_income, tv_outcome, tv_total;
+    private Button left, right;
+    private String MONTH;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,6 +78,8 @@ public class Fragment1 extends Fragment {
         tv_income = view.findViewById(R.id.tv_income);
         tv_outcome = view.findViewById(R.id.tv_outcome);
         tv_total = view.findViewById(R.id.tv_total);
+        left = view.findViewById(R.id.btn_month_left);
+        right = view.findViewById(R.id.btn_month_right);
 
         //등록버튼 설정
         fab = (FloatingActionButton) view.findViewById(R.id.fab_add);
@@ -118,10 +118,12 @@ public class Fragment1 extends Fragment {
     }
 
     protected void loadData(){
+        MONTH = "";
+        MONTH = getYearMonth();
         try{
             document_email = User.getEmail();
             //db에서 값 가져오기 > arraylist에 담기 > adpater에 저장 > 리사이클러 뷰에 뿌리기
-            db.collection(FirebaseID.noteboard).document(document_email).collection(FirebaseID.noteitem)
+            db.collection(FirebaseID.noteboard).document(document_email).collection(MONTH)
                     .orderBy(FirebaseID.notedate, Query.Direction.DESCENDING)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -145,7 +147,7 @@ public class Fragment1 extends Fragment {
                                         outcome += amount;
                                     }
 
-                                    DailyNote item = new DailyNote(bigcate, date, category, note, amount, docId);
+                                    DailyNote item = new DailyNote(bigcate, date, category, note, amount, docId, MONTH);
                                     arrayList.add(item);
                                 }
                                 if(arrayList.size() == 0){
@@ -188,4 +190,7 @@ public class Fragment1 extends Fragment {
         return formattedDate;
     }
 
+    public static String getYearMonth(){
+        return "2022-05";
+    };
 }

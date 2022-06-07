@@ -7,17 +7,19 @@ public class DailyNote {
     private String note;
     private int amount;
     private String idNum;
+    private String MONTH;
 
 
     public DailyNote(){}
 
-    public DailyNote(String bigcate, String date, String category, String note, int amount, String idNum) {
+    public DailyNote(String bigcate, String date, String category, String note, int amount, String idNum, String MONTH) {
         this.bigcate = bigcate;
         this.date = date;
         this.category = category;
         this.note = note;
         this.amount = amount;
         this.idNum = idNum;
+        this.MONTH = MONTH;
     }
 
     public String getBigcate() {
@@ -66,5 +68,13 @@ public class DailyNote {
 
     public void setIdNum(String idNum) {
         this.idNum = idNum;
+    }
+
+    public String getMONTH() {
+        return MONTH;
+    }
+
+    public void setMONTH(String MONTH) {
+        this.MONTH = MONTH;
     }
 }

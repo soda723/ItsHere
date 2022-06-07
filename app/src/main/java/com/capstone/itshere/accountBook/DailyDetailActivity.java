@@ -40,6 +40,7 @@ public class DailyDetailActivity extends AppCompatActivity {
     private TextView dd_inex,dd_date,dd_account,dd_category,dd_amount,dd_note,dd_memo;
     private Button btn_modify,btn_delete;
     private String idNum;
+    private String MONTH;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -53,6 +54,7 @@ public class DailyDetailActivity extends AppCompatActivity {
 
         //intent
         idNum = getIntent().getStringExtra("idNum");
+        MONTH = getIntent().getStringExtra("MONTH");
         Log.e("in ddactivity", idNum);
 
         //툴바 설정
@@ -74,17 +76,17 @@ public class DailyDetailActivity extends AppCompatActivity {
         dd_amount = findViewById(R.id.dd_amount);
         dd_note = findViewById(R.id.dd_note);
         dd_memo = findViewById(R.id.dd_memo);
-        btn_modify = findViewById(R.id.btn_modify);
+        //btn_modify = findViewById(R.id.btn_modify);
         btn_delete = findViewById(R.id.btn_delete);
 
         //수정버튼
-        btn_modify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //
-
-            }
-        });
+//        btn_modify.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //
+//
+//            }
+//        });
 
         //삭제버튼
         btn_delete.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +101,7 @@ public class DailyDetailActivity extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         //삭제 기능 실행
-                                        db.collection(FirebaseID.noteboard).document(document_email).collection(FirebaseID.noteitem)
+                                        db.collection(FirebaseID.noteboard).document(document_email).collection(MONTH)
                                                 .document(idNum).delete()
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
@@ -138,7 +140,7 @@ public class DailyDetailActivity extends AppCompatActivity {
 
         document_email = User.getEmail();
         //db에서 값 가져오기 > arraylist에 담기 > adpater에 저장 > 리사이클러 뷰에 뿌리기
-        db.collection(FirebaseID.noteboard).document(document_email).collection(FirebaseID.noteitem)
+        db.collection(FirebaseID.noteboard).document(document_email).collection(MONTH)
                 .document(idNum).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override

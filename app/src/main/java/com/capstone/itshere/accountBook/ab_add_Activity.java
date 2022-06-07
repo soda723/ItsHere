@@ -3,6 +3,7 @@ package com.capstone.itshere.accountBook;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.capstone.itshere.Fragment1;
 import com.capstone.itshere.R;
 import com.capstone.itshere.account.FirebaseID;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,6 +50,7 @@ public class ab_add_Activity extends AppCompatActivity {
     EditText ab_add_date, ab_add_amount, ab_add_note, ab_add_memo;
     Spinner spinner_account, spinner_category;
     private Button btn_save;
+    private String MONTH;
 
     private Calendar myCalendar = Calendar.getInstance();
     DatePickerDialog.OnDateSetListener myDatePicker = new DatePickerDialog.OnDateSetListener() {
@@ -155,6 +157,7 @@ public class ab_add_Activity extends AppCompatActivity {
                 if(mAuth.getCurrentUser() != null){
                     String noteId = db.collection(FirebaseID.note).document().getId();
                     Map<String,Object> data = new HashMap<>();
+                    MONTH = getYearMonth(ab_add_date.getText().toString());
                     data.put(FirebaseID.documentId, noteId);
                     try{
                         data.put(FirebaseID.bigcate, radioValue.getText().toString());
@@ -169,7 +172,7 @@ public class ab_add_Activity extends AppCompatActivity {
                     data.put(FirebaseID.memo, ab_add_memo.getText().toString());
 
                     db.collection(FirebaseID.noteboard).document(email)
-                            .collection(FirebaseID.noteitem).document(noteId)
+                            .collection(MONTH).document(noteId)
                             .set(data, SetOptions.merge());
                     finish();
                 }else{
@@ -179,6 +182,12 @@ public class ab_add_Activity extends AppCompatActivity {
         });
 
     }//onCreate
+
+    private String getYearMonth(String stringdate) {
+        String[] temp = stringdate.split("-");
+        return temp[0] + "-" + temp[1];
+    }
+
     private void updateLabel(){
         String myFormat = "yyyy-MM-dd";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
@@ -186,7 +195,7 @@ public class ab_add_Activity extends AppCompatActivity {
 
     }
     
-    public Timestamp StringToTimeStamp(String datestring){
+    public static Timestamp StringToTimeStamp(String datestring){
         String newdate = datestring + " 00:00:00";
         Timestamp timestamp = Timestamp.valueOf(newdate);
         return timestamp;

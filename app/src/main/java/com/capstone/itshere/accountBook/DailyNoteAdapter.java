@@ -76,9 +76,11 @@ public class DailyNoteAdapter extends RecyclerView.Adapter<DailyNoteAdapter.Dail
                 public void onClick(View view) {
                     int pos = getAbsoluteAdapterPosition();
                     String idNum = arrayList.get(pos).getIdNum();
+                    String MONTH = arrayList.get(pos).getMONTH();
                     if (pos != RecyclerView.NO_POSITION){
                         Intent intent = new Intent(context, DailyDetailActivity.class);
                         intent.putExtra("idNum", idNum);
+                        intent.putExtra("MONTH", MONTH);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         Log.e("in adpater", idNum);
 

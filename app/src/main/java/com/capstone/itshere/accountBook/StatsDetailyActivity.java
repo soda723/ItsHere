@@ -43,6 +43,7 @@ public class StatsDetailyActivity extends AppCompatActivity {
     private String document_email;
     private ArrayList<DailyNote> arrayList;
     private TextView tv_noitem;
+    private String MONTH;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,8 +83,9 @@ public class StatsDetailyActivity extends AppCompatActivity {
     private void loadCategoryData() {
         try{
             document_email = User.getEmail();
+            MONTH= Fragment1.getYearMonth();
             //db에서 값 가져오기 > arraylist에 담기 > adpater에 저장 > 리사이클러 뷰에 뿌리기
-            db.collection(FirebaseID.noteboard).document(document_email).collection(FirebaseID.noteitem)
+            db.collection(FirebaseID.noteboard).document(document_email).collection(MONTH)
                     .orderBy(FirebaseID.notedate, Query.Direction.DESCENDING)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -100,7 +102,7 @@ public class StatsDetailyActivity extends AppCompatActivity {
                                         int amount = Integer.parseInt(String.valueOf(shot.get(FirebaseID.amount)));
                                         String docId = String.valueOf(shot.get(FirebaseID.documentId));
 
-                                        DailyNote item = new DailyNote(bigcate, date, category, note, amount, docId);
+                                        DailyNote item = new DailyNote(bigcate, date, category, note, amount, docId, MONTH);
                                         arrayList.add(item);
                                     }
                                 }

@@ -16,32 +16,59 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/ly_total"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:gravity="center"
             android:orientation="horizontal">
-
-            <Button
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:layout_weight="1"
-                android:text="가계부" />
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/btn_month_left"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/ic_left_red_24"/>
+                <TextView
+                    android:id="@+id/tv_year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/scdream5"
+                    android:textColor="@color/myMuk"
+                    android:textSize="13dp"
+                    android:gravity="center"
+                    android:text="2022년"/>
+                <TextView
+                    android:id="@+id/tv_month"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/scdream5"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    android:text="5월"/>
+                <Button
+                    android:id="@+id/btn_month_right"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/ic_right_red_24"/>
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btn_stats"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="통계" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="설정" />
+                android:text="지출 통계" />
+<!--            <Button-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="설정" />-->
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ly_total"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal">

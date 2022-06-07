@@ -49,6 +49,7 @@ public class statsActivity extends AppCompatActivity {
     private int v_total=-1;
     private int[] arrayValue = {0,0,0,0,0,0,0};
     private float[] percentageV = {0,0,0,0,0,0,0};
+    private String MONTH;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class statsActivity extends AppCompatActivity {
         //툴바 설정
         back = (ImageButton) findViewById(R.id.tool_sub1_back);
         title = (TextView) findViewById(R.id.tool_sub1_title);
-        title.setText("월통계");
+        title.setText(getYearMonth() + "지출 통계");
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,6 +75,7 @@ public class statsActivity extends AppCompatActivity {
         stats_view.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getApplicationContext());
         stats_view.setLayoutManager(layoutManager);
+        statsArrayList = new ArrayList<>();
 
     }//onCreate--*
 
@@ -81,14 +83,17 @@ public class statsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         String document_email = User.getEmail();
+        MONTH = getYearMonth();
         //db에서 값 가져오기 > arraylist에 담기 > adpater에 저장 > 리사이클러 뷰에 뿌리기
-        db.collection(FirebaseID.noteboard).document(document_email).collection(FirebaseID.noteitem)
+
+        db.collection(FirebaseID.noteboard).document(document_email).collection(MONTH)
                 .orderBy(FirebaseID.notedate, Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         if (value != null){
-
+                            statsArrayList.clear();
+                            arrayValue = new int[]{0, 0, 0, 0, 0, 0, 0};
                             for(DocumentSnapshot snap : value.getDocuments()){
                                 Map<String, Object> shot = snap.getData();
                                 String bigcate = String.valueOf(shot.get(FirebaseID.bigcate));
@@ -121,8 +126,6 @@ public class statsActivity extends AppCompatActivity {
                             for(int i = 0; i <percentageV.length; i++){
                                 percentageV[i] = Math.round((1.0 * arrayValue[i] / v_total * 100*10)/10.0);
                             }
-                            statsArrayList = new ArrayList<>();
-
                             statsArrayList.add(new StatsItem(percentageV[0], CategoryId.food, arrayValue[0]));
                             statsArrayList.add(new StatsItem(percentageV[1], CategoryId.traffic, arrayValue[1]));
                             statsArrayList.add(new StatsItem(percentageV[2], CategoryId.culture, arrayValue[2]));
@@ -153,6 +156,10 @@ public class statsActivity extends AppCompatActivity {
 
 
     }//--OnStart--*
+
+    private String getYearMonth() {
+        return "2022-05";
+    }
 
     protected void makePiechart(){
         //Piechart

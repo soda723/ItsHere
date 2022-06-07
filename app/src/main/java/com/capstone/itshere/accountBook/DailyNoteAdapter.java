@@ -79,7 +79,9 @@ public class DailyNoteAdapter extends RecyclerView.Adapter<DailyNoteAdapter.Dail
                     if (pos != RecyclerView.NO_POSITION){
                         Intent intent = new Intent(context, DailyDetailActivity.class);
                         intent.putExtra("idNum", idNum);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         Log.e("in adpater", idNum);
+
                         context.startActivity(intent);
                     }else{
                         Toast.makeText(context,"잘못된 position",Toast.LENGTH_SHORT).show();

@@ -1,5 +1,6 @@
 package com.capstone.itshere;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -42,6 +43,7 @@ import java.util.Map;
 
 public class Fragment1 extends Fragment {
 
+    public static Fragment CONTEXT;
     private static String TAG = "프레그먼트1";
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
@@ -51,7 +53,7 @@ public class Fragment1 extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     final FirebaseUser User = mAuth.getCurrentUser();
-    public static String document_email;
+    private static String document_email;
     private TextView tv_hint, tv_hint2;
     private LinearLayout ly_total;
     private Button btn_stats;
@@ -63,6 +65,7 @@ public class Fragment1 extends Fragment {
                              Bundle savedInstanceState){
         //Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_1, container, false);
+        CONTEXT = this;
 
         //Initialize
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -104,6 +107,17 @@ public class Fragment1 extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
+        loadData();
+
+    }//onStart--*
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //
+    }
+
+    protected void loadData(){
         try{
             document_email = User.getEmail();
             //db에서 값 가져오기 > arraylist에 담기 > adpater에 저장 > 리사이클러 뷰에 뿌리기
@@ -158,9 +172,9 @@ public class Fragment1 extends Fragment {
             ly_total.setVisibility(View.GONE);
             tv_hint2.setVisibility(View.GONE);
         }
-    }//onStart--*
+    }
 
-    public String timestampToString(String stamp){
+    public static String timestampToString(String stamp){
         stamp = stamp.replace("Timestamp(seconds=", "").replace(" nanoseconds=", "").replace(")", "");
         String[] array = stamp.split(",");
         String ds = array[0];

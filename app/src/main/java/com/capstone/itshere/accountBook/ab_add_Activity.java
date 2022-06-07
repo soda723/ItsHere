@@ -173,7 +173,7 @@ public class ab_add_Activity extends AppCompatActivity {
                             .set(data, SetOptions.merge());
                     finish();
                 }else{
-                    Toast.makeText(getApplicationContext(), "오류가 발생했습니다.", Toast.LENGTH_SHORT);
+                    Toast.makeText(ab_add_Activity.this, "로그인해주세요.", Toast.LENGTH_LONG).show();
                 }
             }
         });

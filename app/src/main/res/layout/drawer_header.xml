@@ -2,45 +2,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="170dp"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal">
-
-    <ImageView
-        android:id="@+id/iv_image"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="center"
-        android:background="#BFBFBF"
-        app:srcCompat="@drawable/ic_drawer_person" />
-
+    android:gravity="center"
+    android:orientation="vertical">
     <LinearLayout
+        android:id="@+id/ly_dh_yes_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_gravity="center"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/drawer_name"
+            android:id="@+id/dh_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:textColor="@color/black"
+            android:text="id님"
+            android:textSize="20dp"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:textColor="@color/black"
-            tools:hint="홍길동"
+            android:layout_margin="10dp"
+            android:text="환영합니다."
             android:textSize="20dp"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:textSize="20dp"
-            android:text="로그인"
-            android:textColor="@color/white"
-            android:background="@color/myRed"/>
-
-
     </LinearLayout>
-
-
+    <LinearLayout
+        android:id="@+id/ly_dh_no_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        android:orientation="vertical"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:layout_margin="10dp"
+            android:text="안녕하세요! 로그인하세요"
+            android:textSize="20dp"/>
+    </LinearLayout>
 
 </LinearLayout>

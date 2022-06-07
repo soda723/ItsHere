@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -116,14 +117,10 @@ public class statsActivity extends AppCompatActivity {
                             if (v_total > 0){
                                 v_total +=1;
                             }
-                            Log.e("arrayValues", arrayValue[0]+""+arrayValue[1]+""+arrayValue[2]+""+arrayValue[3]+""+arrayValue[4]+""+arrayValue[5]+""+arrayValue[6]+"");
-                            Log.e("v_total", v_total +"");
 
                             for(int i = 0; i <percentageV.length; i++){
                                 percentageV[i] = Math.round((1.0 * arrayValue[i] / v_total * 100*10)/10.0);
                             }
-                            Log.e("percentageV", percentageV[0]+""+percentageV[1]+""+percentageV[2]+""+percentageV[3]+""+percentageV[4]+""+percentageV[5]+""+percentageV[6]+"");
-
                             statsArrayList = new ArrayList<>();
 
                             statsArrayList.add(new StatsItem(percentageV[0], CategoryId.food, arrayValue[0]));
@@ -161,6 +158,7 @@ public class statsActivity extends AppCompatActivity {
         //Piechart
         pieChart.setUsePercentValues(true); //퍼센트 값으로 표시
         pieChart.getDescription().setEnabled(false); //chart및 description표시 안모이게
+        pieChart.getLegend().setEnabled(false);
         pieChart.setExtraOffsets(5,10,5,5);
 //        pieChart.setDragDecelerationFrictionCoef(0.95f);
         pieChart.setDrawHoleEnabled(false); //도넛 구멍 없애기
@@ -176,18 +174,23 @@ public class statsActivity extends AppCompatActivity {
                 sampledata.add(new PieEntry(percentageV[i],valuesId[i]));
             }
         }
-//        sampledata.add(new PieEntry(percentageV[0],CategoryId.food));
-//        sampledata.add(new PieEntry(percentageV[1],CategoryId.traffic));
-//        sampledata.add(new PieEntry(percentageV[2],CategoryId.culture));
-//        sampledata.add(new PieEntry(percentageV[3],CategoryId.beauty));
-//        sampledata.add(new PieEntry(percentageV[4],CategoryId.household));
-//        sampledata.add(new PieEntry(percentageV[5], CategoryId.congratuations));
-//        sampledata.add(new PieEntry(percentageV[6],CategoryId.etc));
+//
         PieDataSet dataSet = new PieDataSet(sampledata, "Sample Data");
 
         dataSet.setSliceSpace(1.5f); // 구역간 라인표시
 //        dataSet.setSelectionShift(5f);//??
-        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+
+        final int[] MY_COLORS = {Color.rgb(237 ,28,36),
+                                Color.rgb(255,127,39),
+                                Color.rgb(255,215,56),
+                                Color.rgb(55,126,71),
+                                Color.rgb(50,130,246),
+                                Color.rgb(115,43,245),
+                                Color.rgb(128,128,128)};
+        ArrayList<Integer> colors = new ArrayList<Integer>();
+        for(int c: MY_COLORS) colors.add(c);
+        dataSet.setColors(colors);
+        //dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
 
         PieData data = new PieData((dataSet));
         data.setValueTextSize(12f);

@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ItsHere">
         <activity
+            android:name=".accountBook.StatsDetailyActivity"
+            android:exported="false" />
+        <activity
             android:name=".accountBook.DailyDetailActivity"
             android:exported="false" />
         <activity

@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +17,8 @@ import android.widget.TextView;
 import com.capstone.itshere.R;
 import com.capstone.itshere.account.FirebaseID;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,6 +50,7 @@ public class DailyDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_detail);
+
         //intent
         idNum = getIntent().getStringExtra("idNum");
         Log.e("in ddactivity", idNum);
@@ -77,6 +82,7 @@ public class DailyDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //
+
             }
         });
 
@@ -84,7 +90,44 @@ public class DailyDetailActivity extends AppCompatActivity {
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DailyDetailActivity.this);
+                alertDialogBuilder.setTitle("가계부 내역 삭제");
+                alertDialogBuilder
+                        .setMessage("가계부 내역을 삭제하시겠습니까?")
+                        .setCancelable(false)
+                        .setPositiveButton("삭제",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        //삭제 기능 실행
+                                        db.collection(FirebaseID.noteboard).document(document_email).collection(FirebaseID.noteitem)
+                                                .document(idNum).delete()
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d("Daily Note delete", "DocumentSnapshot successfully deleted!");
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w("Daily Note delete", "Error deleting document", e);
+                                                    }
+                                                });
+                                        //액티비티 종료
+                                        DailyDetailActivity.this.finish();
+                                    }
+                                })
+                        .setNegativeButton("취소",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                // 다이얼로그 생성
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                // 다이얼로그 보여주기
+                alertDialog.show();
             }
         });
     }//--onCreate--*

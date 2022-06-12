@@ -155,14 +155,14 @@ public class ab_add_Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(mAuth.getCurrentUser() != null){
-                    String noteId = db.collection(FirebaseID.note).document().getId();
-                    Map<String,Object> data = new HashMap<>();
-                    MONTH = getYearMonth(ab_add_date.getText().toString());
+                    String noteId = db.collection(FirebaseID.note).document().getId(); //고유 id값 생성
+                    Map<String,Object> data = new HashMap<>(); //HashMap을 통해 데이터 (이름)-(값)지정
+                    MONTH = getYearMonth(ab_add_date.getText().toString()); // 지정한 날짜에서 년도-월 값 지정
                     data.put(FirebaseID.documentId, noteId);
                     try{
                         data.put(FirebaseID.bigcate, radioValue.getText().toString());
                     }catch(NullPointerException e){
-                        data.put(FirebaseID.bigcate, "지출");
+                        data.put(FirebaseID.bigcate, "지출"); // 수입/지출항목을 지정하지 않으면 기본값 지출로 설정
                     }
                     data.put(FirebaseID.notedate, StringToTimeStamp(ab_add_date.getText().toString()));
                     data.put(FirebaseID.account, spinner_account.getSelectedItem().toString());
@@ -170,12 +170,13 @@ public class ab_add_Activity extends AppCompatActivity {
                     data.put(FirebaseID.amount, Integer.parseInt(String.valueOf(ab_add_amount.getText())));
                     data.put(FirebaseID.note, ab_add_note.getText().toString());
                     data.put(FirebaseID.memo, ab_add_memo.getText().toString());
-
+                    //hashMap데이터를 firestore에 저장
                     db.collection(FirebaseID.noteboard).document(email)
                             .collection(MONTH).document(noteId)
                             .set(data, SetOptions.merge());
-                    finish();
+                    finish(); //완료되면 액티비티 종료
                 }else{
+                    //로그인 되지 않은 상태라면 에러메시지를 보여주고 버튼이 작동하지 않음
                     Toast.makeText(ab_add_Activity.this, "로그인해주세요.", Toast.LENGTH_LONG).show();
                 }
             }

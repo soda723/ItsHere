@@ -8,12 +8,56 @@
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="멤버십"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="멤버십 이미지 업로드"
+        android:gravity="center"
+        android:background="@color/white"
         android:textColor="@color/myBlue"
-        android:textSize="100dp"/>
+        android:fontFamily="@font/scdream7"
+        android:textSize="20dp" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/myBlue"
+        android:onClick="clickLoad"
+        android:text="맴버십 바코드 추가"
+        android:textAllCaps="false" />
+
+    <!--    android:layout_weight="1" 나머지 부분 다 먹는다. -->
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="match_parent"
+        android:layout_height="311dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/myBlue"
+        android:onClick="clickUpload"
+        android:text="스타벅스"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/myBlue"
+        android:onClick="clickUpload"
+        android:text="신세계백화점"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/myBlue"
+        android:onClick="clickUpload"
+        android:text="기타"
+        android:textAllCaps="false" />
 
 
 </LinearLayout>

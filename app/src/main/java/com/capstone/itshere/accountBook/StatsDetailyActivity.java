@@ -49,7 +49,7 @@ public class StatsDetailyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats_detaily);
 
-        //intent
+        //intent // 카테고리 이름 가져오기 ex)식비
         categoryname = getIntent().getStringExtra("category");
 
         //Initialize
@@ -96,7 +96,7 @@ public class StatsDetailyActivity extends AppCompatActivity {
                                     Map<String, Object> shot = snap.getData();
                                     String category = String.valueOf(shot.get(FirebaseID.category));
                                     String bigcate = String.valueOf(shot.get(FirebaseID.bigcate));
-                                    if (category.equals(categoryname) && bigcate.equals("지출")){
+                                    if (category.equals(categoryname) && bigcate.equals("지출")){ //해당카테고리(ex식비) 이고 지출인 데이터만 처리
                                         String date = Fragment1.timestampToString(String.valueOf(shot.get(FirebaseID.notedate)));
                                         String note = String.valueOf(shot.get(FirebaseID.note));
                                         int amount = Integer.parseInt(String.valueOf(shot.get(FirebaseID.amount)));
@@ -107,15 +107,14 @@ public class StatsDetailyActivity extends AppCompatActivity {
                                     }
                                 }
                                 Log.e("갯수", arrayList.size() + "개");
-                                if(arrayList.size() == 0){
-                                    tv_noitem.setVisibility(View.VISIBLE);
-                                    recyclerView.setVisibility(View.GONE);
-                                    Log.e("ㅇㅇㅇㅇ", "개");
+                                if(arrayList.size() == 0){ //해당항목에 데이터가 없을 경우
+                                    tv_noitem.setVisibility(View.VISIBLE); // 데이터 없음 메시지 레이아웃 보이게
+                                    recyclerView.setVisibility(View.GONE); //리사이클러 뷰는 안보이게
                                 }else{
                                     adapter = new DailyNoteAdapter(arrayList, getApplicationContext());
-                                    recyclerView.setAdapter(adapter);
-                                    tv_noitem.setVisibility(View.GONE);
-                                    recyclerView.setVisibility(View.VISIBLE);
+                                    recyclerView.setAdapter(adapter); //리사이크러뷰에 데이터 표시
+                                    tv_noitem.setVisibility(View.GONE);//데이터 없음 메시지 안보이게
+                                    recyclerView.setVisibility(View.VISIBLE);//리사이클러 뷰 보이게
 
                                 }
 

@@ -52,7 +52,7 @@ public class DailyDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_detail);
 
-        //intent
+        //intent //액티비티 시작시 상세내용의 고유 id와 년도-월값을 받는다.
         idNum = getIntent().getStringExtra("idNum");
         MONTH = getIntent().getStringExtra("MONTH");
         Log.e("in ddactivity", idNum);
@@ -92,17 +92,18 @@ public class DailyDetailActivity extends AppCompatActivity {
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //팝업창 설정
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DailyDetailActivity.this);
-                alertDialogBuilder.setTitle("가계부 내역 삭제");
+                alertDialogBuilder.setTitle("가계부 내역 삭제"); //팝업창 제목
                 alertDialogBuilder
-                        .setMessage("가계부 내역을 삭제하시겠습니까?")
-                        .setCancelable(false)
-                        .setPositiveButton("삭제",
+                        .setMessage("가계부 내역을 삭제하시겠습니까?")//팝업창 메시지
+                        .setCancelable(false) //취소버튼 - 취소
+                        .setPositiveButton("삭제", //긍정버튼 이름은 삭제, 기능은 아래와 같이 실행
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         //삭제 기능 실행
                                         db.collection(FirebaseID.noteboard).document(document_email).collection(MONTH)
-                                                .document(idNum).delete()
+                                                .document(idNum).delete() //고유id값을 가진 데이터를 찾아서 삭제
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
@@ -115,7 +116,7 @@ public class DailyDetailActivity extends AppCompatActivity {
                                                         Log.w("Daily Note delete", "Error deleting document", e);
                                                     }
                                                 });
-                                        //액티비티 종료
+                                        //삭제하면 해당 데이터가 존재하지 않으므로 액티비티 종료
                                         DailyDetailActivity.this.finish();
                                     }
                                 })

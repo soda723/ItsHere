@@ -83,9 +83,9 @@ public class LoginActivity extends AppCompatActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     if (user != null){
                                         Toast.makeText(LoginActivity.this, "로그인 성공 : " + user.getEmail(), Toast.LENGTH_SHORT).show();
-                                        check_id.setText(user.getEmail() + "님 환영합니다.");
-                                        ly_login.setVisibility(View.GONE);
-                                        ly_logout.setVisibility(View.VISIBLE);
+                                        check_id.setText(user.getEmail() + "님 환영합니다."); //drawer header에 id와 인삿말표시
+                                        ly_login.setVisibility(View.GONE); // 로그아웃시 메시지 레이아웃 가리기
+                                        ly_logout.setVisibility(View.VISIBLE); // 로그인 메시지 레이아웃 보이기
                                     }
 
                                 } else {
@@ -104,8 +104,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mAuth.signOut();
                 Toast.makeText(LoginActivity.this, "로그아웃", Toast.LENGTH_SHORT).show();
-                ly_logout.setVisibility(View.GONE);
-                ly_login.setVisibility(View.VISIBLE);
+                ly_logout.setVisibility(View.GONE); // 로그인 메시지 레이아웃 보이기
+                ly_login.setVisibility(View.VISIBLE); // 로그아웃시 메시지 레이아웃 보이기
             }
         });
     }//onCreate

@@ -71,7 +71,6 @@ public class SignupActivity extends AppCompatActivity {
                                             mStore.collection(FirebaseID.user).document(user.getUid()).set(userMap, SetOptions.merge());
                                             finish();
                                         } else {
-
                                         }
 
                                     } else {

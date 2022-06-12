@@ -46,7 +46,7 @@ public class statsActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     final FirebaseUser User = mAuth.getCurrentUser();
-    private int v_total=-1;
+    private int v_total=-1; //데이터가 없을 경우 에러 확인을 위해 음수값 지정
     private int[] arrayValue = {0,0,0,0,0,0,0};
     private float[] percentageV = {0,0,0,0,0,0,0};
     private String MONTH;
@@ -92,16 +92,16 @@ public class statsActivity extends AppCompatActivity {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         if (value != null){
-                            statsArrayList.clear();
-                            arrayValue = new int[]{0, 0, 0, 0, 0, 0, 0};
+                            statsArrayList.clear(); //이전 데이터 초기화(상세내역으로 이동했다 돌아오는 경우 데이터 중첩문제 방지)
+                            arrayValue = new int[]{0, 0, 0, 0, 0, 0, 0}; // 항목별 금액 값 초기화
                             for(DocumentSnapshot snap : value.getDocuments()){
                                 Map<String, Object> shot = snap.getData();
                                 String bigcate = String.valueOf(shot.get(FirebaseID.bigcate));
-                                if(bigcate.equals("지출")){
+                                if(bigcate.equals("지출")){ //지출 항목에 맞는 것만 금액을 불러온다
                                     String category = String.valueOf(shot.get(FirebaseID.category));
                                     int amount = Integer.parseInt(shot.get(FirebaseID.amount).toString());
-                                    v_total += amount;
-
+                                    v_total += amount; //퍼센티지 계산을 위해 전체 금액을 지정하고 값 더함
+                                    //각 항목에 맞게 금액을 더함
                                     if (category.equals(CategoryId.food)){
                                         arrayValue[0] += amount;
                                     }else if(category.equals(CategoryId.traffic)){
@@ -119,12 +119,14 @@ public class statsActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                            if (v_total > 0){
-                                v_total +=1;
+                            if (v_total > 0){ // 총액이 양수라면 데이터가 존재하는것
+                                v_total +=1; //-1값 상쇄를 위해 1을 더한다.
                             }
 
+                            //원형 그래프를 그리기 위한 퍼센티지 계산
                             for(int i = 0; i <percentageV.length; i++){
                                 percentageV[i] = Math.round((1.0 * arrayValue[i] / v_total * 100*10)/10.0);
+                                //소수점 첫째자리까지 유효숫자를 표시하기 위해 10을 곱한후 다시 나눈다
                             }
                             statsArrayList.add(new StatsItem(percentageV[0], CategoryId.food, arrayValue[0]));
                             statsArrayList.add(new StatsItem(percentageV[1], CategoryId.traffic, arrayValue[1]));
@@ -134,20 +136,19 @@ public class statsActivity extends AppCompatActivity {
                             statsArrayList.add(new StatsItem(percentageV[5], CategoryId.congratuations, arrayValue[5]));
                             statsArrayList.add(new StatsItem(percentageV[6], CategoryId.etc, arrayValue[6]));
                             adapter = new statsItemAdapter(statsArrayList,getApplicationContext());
-                            stats_view.setAdapter(adapter);
+                            stats_view.setAdapter(adapter); //리사이클러뷰에 데이터 표시시
 
-                            //내림차순 정렬
+                           //내림차순 정렬
                             Comparator<StatsItem> percentageDesc = new Comparator<StatsItem>() {
                                 @Override
                                 public int compare(StatsItem item1, StatsItem item2) {
                                     return (item2.getAmount() - item1.getAmount());
                                 }
                             } ;
-
                             Collections.sort(statsArrayList, percentageDesc) ;
-                            adapter.notifyDataSetChanged() ;
 
-                            makePiechart();
+                            adapter.notifyDataSetChanged() ; //어댑터에 데이터가 변화한 사실을 알린다
+                            makePiechart(); //원형 그래프 그리기
 
                         }
                     }
